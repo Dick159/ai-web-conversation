@@ -1,6 +1,6 @@
 'use client'
 import type { FC } from 'react'
-import React, { useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import TemplateVarPanel, { PanelTitle, VarOpBtnGroup } from '../value-panel'
 import FileUploaderInAttachmentWrapper from '../base/file-uploader-in-attachment'
@@ -81,7 +81,6 @@ const Welcome: FC<IWelcomeProps> = ({
   const logError = (message: string) => {
     notify({ type: 'error', message, duration: 3000 })
   }
-
 
   const renderHeader = () => {
     return (

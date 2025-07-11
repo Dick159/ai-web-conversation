@@ -2,6 +2,7 @@
 import Button from "@/app/components/base/button";
 import type { FC } from 'react'
 import React, { useEffect, useRef } from 'react'
+import { useSearchParams } from 'next/navigation'
 import cn from 'classnames'
 import { useTranslation } from 'react-i18next'
 import Textarea from 'rc-textarea'
@@ -39,17 +40,17 @@ export type IChatProps = {
 
 
 const Chat: FC<IChatProps> = ({
-  chatList,
-  feedbackDisabled = false,
-  isHideSendInput = false,
-  onFeedback,
-  checkCanSend,
-  onSend = () => { },
-  useCurrentUserAvatar,
-  isResponding,
-  controlClearQuery,
-  visionConfig,
-}) => {
+                                chatList,
+                                feedbackDisabled = false,
+                                isHideSendInput = false,
+                                onFeedback,
+                                checkCanSend,
+                                onSend = () => { },
+                                useCurrentUserAvatar,
+                                isResponding,
+                                controlClearQuery,
+                                visionConfig,
+                              }) => {
   const { t } = useTranslation()
   const { notify } = Toast
   const isUseInputMethod = useRef(false)
@@ -76,17 +77,17 @@ const Chat: FC<IChatProps> = ({
     return true
   }
 
-
+  const searchParams = useSearchParams()
+  const urlQuery = searchParams.get('query')
   // 在组件加载时从 URL 中提取 query 参数
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search)
-    const urlQuery = searchParams.get('query') // 假设你的 query 参数名为 'query'
-    if (urlQuery){
+    // 假设你的 query 参数名为 'query'
+    if (urlQuery) {
       queryRef.current = urlQuery
       // 如果需要，也可以同步到本地 state
       // setQuery(urlQuery);
     }
-  }, [location.search])
+  }, [queryRef.current])
 
   useEffect(() => {
     if (controlClearQuery) {
@@ -179,8 +180,8 @@ const Chat: FC<IChatProps> = ({
       </div>
       <div className={cn(!feedbackDisabled && '!left-3.5 !right-3.5', 'absolute z-10 bottom-0 left-0 right-0')}>
         {!isResponding && (<div>
-          <Button onClick={handleSend}>开启AI分析</Button>
-        </div>
+            <Button onClick={handleSend}>开启AI分析</Button>
+          </div>
         )
         }
       </div>

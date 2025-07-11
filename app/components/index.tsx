@@ -2,6 +2,8 @@
 'use client'
 import type { FC } from 'react'
 import React, { useEffect, useRef, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
+
 import { useTranslation } from 'react-i18next'
 import produce, { setAutoFreeze } from 'immer'
 import { useBoolean, useGetState } from 'ahooks'
@@ -100,7 +102,8 @@ const Main: FC<IMainProps> = () => {
   })()
 
   // const conversationName = currConversationInfo?.name || t('app.chat.newChatDefaultName') as string
-  const conversationName = new URLSearchParams(location.search).get("query") || t('app.chat.newChatDefaultName') as string
+  const searchParams = useSearchParams()
+  const conversationName = searchParams.get("query") || t('app.chat.newChatDefaultName') as string
   const conversationIntroduction = currConversationInfo?.introduction || ''
   const suggestedQuestions = currConversationInfo?.suggested_questions || []
 
@@ -318,11 +321,11 @@ const Main: FC<IMainProps> = () => {
   const [userQuery, setUserQuery] = useState('')
 
   const updateCurrentQA = ({
-    responseItem,
-    questionId,
-    placeholderAnswerId,
-    questionItem,
-  }: {
+                             responseItem,
+                             questionId,
+                             placeholderAnswerId,
+                             questionItem,
+                           }: {
     responseItem: ChatItem
     questionId: string
     placeholderAnswerId: string
