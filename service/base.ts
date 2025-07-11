@@ -285,6 +285,11 @@ const baseFetch = (url: string, fetchOptions: any, { needAllResponseContent }: I
       globalThis.fetch(urlWithPrefix, options)
         .then((res: any) => {
           const resClone = res.clone()
+
+          if(res.status == 500) {
+              return ;
+          }
+
           // Error handler
           if (!/^(2|3)\d{2}$/.test(res.status)) {
             try {
@@ -304,7 +309,7 @@ const baseFetch = (url: string, fetchOptions: any, { needAllResponseContent }: I
               }
             }
             catch (e) {
-              Toast.notify({ type: 'error', message: `${e}` })
+             // Toast.notify({ type: 'error', message: `${e}` })
             }
 
             return Promise.reject(resClone)
@@ -391,6 +396,7 @@ export const ssePost = (
 
   globalThis.fetch(urlWithPrefix, options)
     .then((res: any) => {
+      console.log(res);
       if (!/^(2|3)\d{2}$/.test(res.status)) {
         // eslint-disable-next-line no-new
         new Promise(() => {

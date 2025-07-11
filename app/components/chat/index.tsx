@@ -30,7 +30,7 @@ export type IChatProps = {
   isHideSendInput?: boolean
   onFeedback?: FeedbackFunc
   checkCanSend?: () => boolean
-  onSend?: (message: string, files: VisionFile[]) => void
+  onSend?: (message: string, files: VisionFile[],myToServerInput?: Record<string, any>) => void
   useCurrentUserAvatar?: boolean
   isResponding?: boolean
   controlClearQuery?: number
@@ -115,7 +115,27 @@ const Chat: FC<IChatProps> = ({
       transfer_method: fileItem.type,
       url: fileItem.url,
       upload_file_id: fileItem.fileId,
-    })))
+    })),{"deepThink":0})
+    if (!files.find(item => item.type === TransferMethod.local_file && !item.fileId)) {
+      if (files.length)
+        onClear()
+      if (!isResponding) {
+        //setQuery('')
+        //queryRef.current = ''
+      }
+    }
+  }
+
+  const handleDeepSend = () => {
+    if (!valid() || (checkCanSend && !checkCanSend()))
+      return
+
+    onSend(queryRef.current, files.filter(file => file.progress !== -1).map(fileItem => ({
+      type: 'image',
+      transfer_method: fileItem.type,
+      url: fileItem.url,
+      upload_file_id: fileItem.fileId,
+    })),{"deepThink":1})
     if (!files.find(item => item.type === TransferMethod.local_file && !item.fileId)) {
       if (files.length)
         onClear()
@@ -179,8 +199,9 @@ const Chat: FC<IChatProps> = ({
         })}
       </div>
       <div className={cn(!feedbackDisabled && '!left-3.5 !right-3.5', 'absolute z-10 bottom-0 left-0 right-0')}>
-        {!isResponding && (<div>
-            <Button onClick={handleSend}>开启AI分析</Button>
+        {!isResponding && (<div className='flex justify-center'>
+            <Button onClick={handleSend}   type='primary'>  AI快速智能分析    </Button>
+            <Button onClick={handleDeepSend}   className=' ml-5 bg-amber-400' >AI深度分析</Button>
           </div>
         )
         }

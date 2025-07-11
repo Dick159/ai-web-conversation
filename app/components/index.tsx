@@ -306,10 +306,11 @@ const Main: FC<IMainProps> = () => {
     const promptVariablesLens = promptConfig.prompt_variables.length
 
     const emptyInput = inputLens < promptVariablesLens || Object.values(currInputs).find(v => !v)
-    if (emptyInput) {
-      logError(t('app.errorMessage.valueOfVarRequired'))
-      return false
-    }
+    //关闭输入校验
+    // if (emptyInput) {
+    //   logError(t('app.errorMessage.valueOfVarRequired'))
+    //   return false
+    // }
     return true
   }
 
@@ -352,7 +353,7 @@ const Main: FC<IMainProps> = () => {
     }
   }
 
-  const handleSend = async (message: string, files?: VisionFile[]) => {
+  const handleSend = async (message: string, files?: VisionFile[], myToServerInput?: Record<string, any>) => {
     if (isResponding) {
       notify({ type: 'info', message: t('app.errorMessage.waitForResponse') })
       return
@@ -369,6 +370,12 @@ const Main: FC<IMainProps> = () => {
 
         else
           toServerInputs[key] = value
+      })
+    }
+
+    if (myToServerInput) {
+      Object.keys(myToServerInput).forEach((key) => {
+        toServerInputs[key] = myToServerInput[key]
       })
     }
 
@@ -465,12 +472,14 @@ const Main: FC<IMainProps> = () => {
 
         if (getConversationIdChangeBecauseOfNew()) {
           const { data: allConversations }: any = await fetchConversations()
-          const newItem: any = await generationConversationName(allConversations[0].id)
+          if (allConversations && allConversations.length > 0) {
+            const newItem: any = await generationConversationName(allConversations[0].id)
 
-          const newAllConversations = produce(allConversations, (draft: any) => {
-            draft[0].name = newItem.name
-          })
-          setConversationList(newAllConversations as any)
+            const newAllConversations = produce(allConversations, (draft: any) => {
+              draft[0].name = newItem.name
+            })
+            setConversationList(newAllConversations as any)
+          }
         }
         setConversationIdChangeBecauseOfNew(false)
         resetNewConversationInputs()
