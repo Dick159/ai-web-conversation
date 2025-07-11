@@ -100,7 +100,7 @@ const Main: FC<IMainProps> = () => {
   })()
 
   // const conversationName = currConversationInfo?.name || t('app.chat.newChatDefaultName') as string
-  const conversationName = new URLSearchParams(window.location.search).get("query") || t('app.chat.newChatDefaultName') as string
+  const conversationName = new URLSearchParams(location.search).get("query") || t('app.chat.newChatDefaultName') as string
   const conversationIntroduction = currConversationInfo?.introduction || ''
   const suggestedQuestions = currConversationInfo?.suggested_questions || []
 
