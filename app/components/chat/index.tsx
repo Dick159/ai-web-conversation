@@ -33,6 +33,7 @@ export type IChatProps = {
   onSend?: (message: string, files: VisionFile[],myToServerInput?: Record<string, any>) => void
   useCurrentUserAvatar?: boolean
   isResponding?: boolean
+  isQuickAnalyze?: boolean
   controlClearQuery?: number
   visionConfig?: VisionSettings
 }
@@ -48,12 +49,15 @@ const Chat: FC<IChatProps> = ({
                                 onSend = () => { },
                                 useCurrentUserAvatar,
                                 isResponding,
+                                isQuickAnalyze,
                                 controlClearQuery,
                                 visionConfig,
                               }) => {
   const { t } = useTranslation()
   const { notify } = Toast
   const isUseInputMethod = useRef(false)
+
+  const hasQuickAnalyze = useRef(false);
 
   const [query, setQuery] = React.useState('')
   const queryRef = useRef('')
